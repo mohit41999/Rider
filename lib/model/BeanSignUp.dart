@@ -23,16 +23,16 @@ class BeanSignUp {
 }
 
 class Data {
-  int usertype;
+  dynamic usertype;
   String kitchenname;
   String email;
-  int riderid;
+  dynamic riderid;
   String cityid;
   String mobilenumber;
   String biketype;
   String youhavelicense;
-  int userstatus;
-  int status;
+  dynamic userstatus;
+  dynamic status;
   String createddate;
   String modifieddate;
   String password;
@@ -40,19 +40,19 @@ class Data {
 
   Data(
       {this.usertype,
-        this.kitchenname,
-        this.email,
-        this.riderid,
-        this.cityid,
-        this.mobilenumber,
-        this.biketype,
-        this.youhavelicense,
-        this.userstatus,
-        this.status,
-        this.createddate,
-        this.modifieddate,
-        this.password,
-        this.userId});
+      this.kitchenname,
+      this.email,
+      this.riderid,
+      this.cityid,
+      this.mobilenumber,
+      this.biketype,
+      this.youhavelicense,
+      this.userstatus,
+      this.status,
+      this.createddate,
+      this.modifieddate,
+      this.password,
+      this.userId});
 
   Data.fromJson(Map<String, dynamic> json) {
     usertype = json['usertype'];
@@ -68,7 +68,7 @@ class Data {
     createddate = json['createddate'];
     modifieddate = json['modifieddate'];
     password = json['password'];
-    userId = json['user_id'];
+    userId = json['id'];
   }
 
   Map<String, dynamic> toJson() {
@@ -86,9 +86,7 @@ class Data {
     data['createddate'] = this.createddate;
     data['modifieddate'] = this.modifieddate;
     data['password'] = this.password;
-    data['user_id'] = this.userId;
+    data['id'] = this.userId;
     return data;
   }
 }
-
-

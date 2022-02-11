@@ -30,7 +30,6 @@ class _CutomerChatScreenState extends State<CutomerChatScreen> {
 
   ProgressDialog progressDialog;
 
-
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
@@ -65,7 +64,6 @@ class _CutomerChatScreenState extends State<CutomerChatScreen> {
         backgroundColor: Colors.white,
         body: Stack(
           children: [
-
             Padding(
               padding: EdgeInsets.only(bottom: 100),
               child: Column(
@@ -121,31 +119,31 @@ class _CutomerChatScreenState extends State<CutomerChatScreen> {
                   ),
                   Expanded(
                       child: FutureBuilder<List<response.Data>>(
-                        future: _future,
-                        builder: (context, projectSnap) {
-                          print(projectSnap);
-                          if (projectSnap.connectionState == ConnectionState.done) {
-                            if (projectSnap.hasData) {
-                              return ListView.builder(
-                                itemCount: list.length,
-                                controller: scrollController,
-                                itemBuilder: (context, index) {
-                                  return chatDesign(list[index]);
-                                },
-                              );
-                            } else {
-                              return Container();
-                            }
-                          } else {
-                            return Container(
-                              child: Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                            );
-                          }
-                        },
-                      )),
-                 /* Expanded(
+                    future: _future,
+                    builder: (context, projectSnap) {
+                      print(projectSnap);
+                      if (projectSnap.connectionState == ConnectionState.done) {
+                        if (projectSnap.hasData) {
+                          return ListView.builder(
+                            itemCount: list.length,
+                            controller: scrollController,
+                            itemBuilder: (context, index) {
+                              return chatDesign(list[index]);
+                            },
+                          );
+                        } else {
+                          return Container();
+                        }
+                      } else {
+                        return Container(
+                          child: Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                      }
+                    },
+                  )),
+                  /* Expanded(
                       child: FutureBuilder<List<response.Data>>(
                         future: _future,
                         builder: (context, projectSnap) {
@@ -172,7 +170,7 @@ class _CutomerChatScreenState extends State<CutomerChatScreen> {
                           }
                         },
                       )),*/
-               /*   Expanded(
+                  /*   Expanded(
                       child: FutureBuilder<List<response.Data>>(
                         future: _future,
                         builder: (context, projectSnap) {
@@ -197,22 +195,17 @@ class _CutomerChatScreenState extends State<CutomerChatScreen> {
                 ],
               ),
             ),
-
-
-
             Positioned.fill(
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
                     alignment: Alignment.bottomCenter,
                     height: 50,
-                    margin:
-                    EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                    margin: EdgeInsets.only(left: 16, right: 16, bottom: 16),
                     decoration: BoxDecoration(
                         color: Color(0xffF3F6FA),
                         borderRadius: BorderRadius.circular(10)),
                     child: Row(
-
                       children: [
                         Expanded(
                           child: Padding(
@@ -229,8 +222,8 @@ class _CutomerChatScreenState extends State<CutomerChatScreen> {
                             validation();
                           },
                           child: Padding(
-                            padding: EdgeInsets.only(
-                                right: 16, bottom: 16, top: 8),
+                            padding:
+                                EdgeInsets.only(right: 16, bottom: 16, top: 8),
                             child: Image.asset(
                               Res.ic_send,
                               width: 50,
@@ -239,15 +232,11 @@ class _CutomerChatScreenState extends State<CutomerChatScreen> {
                           ),
                         ),
                       ],
-                    )
-                ),
+                    )),
               ),
             ),
-
-
           ],
-        )
-    );
+        ));
   }
 
   Future<List<response.Data>> getChat(BuildContext context) async {
@@ -257,13 +246,11 @@ class _CutomerChatScreenState extends State<CutomerChatScreen> {
     GetChat bean = await ApiProvider().getChat(from);
     progressDialog.dismiss();
     list = bean.data;
-     if (bean.status == true) {
+    if (bean.status == true) {
       if (list == null) {
         list = List();
       }
-      setState(() {
-
-      });
+      setState(() {});
 
       return list;
     }
@@ -386,10 +373,11 @@ class _CutomerChatScreenState extends State<CutomerChatScreen> {
     }
   }
 
-  Future<Chat.BeanSendMessage>sendMessage(String messageInput) async {
+  Future<Chat.BeanSendMessage> sendMessage(String messageInput) async {
     try {
+      var user = await Utils.getUser();
       FormData from = FormData.fromMap({
-        "userid": "70",
+        "userid": user.data.userId,
         "token": "123456789",
         "message": messageInput,
       });
@@ -401,19 +389,19 @@ class _CutomerChatScreenState extends State<CutomerChatScreen> {
         result.message = bean.data.message;
         result.msgType = bean.data.msgType;
         result.createddate = bean.data.createddate;
-        if(list!=null){
+        if (list != null) {
           list.add(result);
-        }else{
+        } else {
           list = List();
           list.add(result);
-
         }
         setState(() {
           messageInput = _msg.text = "";
         });
 
         Future.delayed(const Duration(milliseconds: 500), () {
-          scrollController.animateTo(scrollController.position.maxScrollExtent, curve: Curves.ease, duration: Duration(milliseconds: 300));
+          scrollController.animateTo(scrollController.position.maxScrollExtent,
+              curve: Curves.ease, duration: Duration(milliseconds: 300));
         });
       } else {
         Utils.showToast(bean.message);
@@ -430,13 +418,11 @@ class _CutomerChatScreenState extends State<CutomerChatScreen> {
   }
 
   void validation() {
-  var messageInput=_msg.text.toString();
-    if(messageInput.isEmpty){
+    var messageInput = _msg.text.toString();
+    if (messageInput.isEmpty) {
       Utils.showToast("Please Enter Message");
-    }else{
+    } else {
       sendMessage(messageInput);
     }
   }
-
-
 }

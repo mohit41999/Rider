@@ -20,14 +20,15 @@ import 'package:rider_app/model/GetCustomerFeedback.dart';
 import 'package:rider_app/model/GetOrdeHistory.dart';
 import 'package:rider_app/model/GetOrderDetails.dart';
 import 'package:rider_app/model/GetOverAllReview.dart';
+import 'package:rider_app/model/bankAccountModel.dart';
 import 'package:rider_app/screen/TripSummaryScreen.dart';
 import 'package:rider_app/utils/DioLogger.dart';
 
 import 'EndPoints.dart';
 
-
 class ApiProvider {
-  static const _baseUrl = "https://nohungkitchen.notionprojects.tech/api/rider/";
+  static const _baseUrl =
+      "https://nohungkitchen.notionprojects.tech/api/rider/";
   static const String TAG = "ApiProvider";
 
   Dio _dio;
@@ -39,7 +40,7 @@ class ApiProvider {
     _dio.interceptors
         .add(InterceptorsWrapper(onRequest: (RequestOptions options) async {
       options.headers = {
-        'Content-Type':'multipart/form-data',
+        'Content-Type': 'multipart/form-data',
       };
       DioLogger.onSend(TAG, options);
       return options;
@@ -68,9 +69,44 @@ class ApiProvider {
     return null;
   }
 
+  Future AddBankAccount(FormData params) async {
+    try {
+      Response response =
+          await _dio.post(EndPoints.add_account_detail, data: params);
+      return jsonDecode(response.data);
+    } catch (error, stacktrace) {
+      print("Exception occurred: $error stackTrace: $stacktrace");
+      Map<dynamic, dynamic> map = _dioError.response.data;
+      if (_dioError.response.statusCode == 500) {
+        throwIfNoSuccess(map['message']);
+      } else {
+        throwIfNoSuccess("Something gone wrong.");
+      }
+    }
+    return null;
+  }
+
+  Future getBankAccounts(FormData params) async {
+    try {
+      Response response =
+          await _dio.post(EndPoints.get_bank_accounts, data: params);
+      return BankAccountsModel.fromJson(json.decode(response.data));
+    } catch (error, stacktrace) {
+      print("Exception occurred: $error stackTrace: $stacktrace");
+      Map<dynamic, dynamic> map = _dioError.response.data;
+      if (_dioError.response.statusCode == 500) {
+        throwIfNoSuccess(map['message']);
+      } else {
+        throwIfNoSuccess("Something gone wrong.");
+      }
+    }
+    return null;
+  }
+
   Future getFeedback(FormData params) async {
     try {
-      Response response = await _dio.post(EndPoints.get_received_reviews, data: params);
+      Response response =
+          await _dio.post(EndPoints.get_received_reviews, data: params);
       return BeanGetFeedback.fromJson(jsonDecode(response.data));
     } catch (error, stacktrace) {
       print("Exception occurred: $error stackTrace: $stacktrace");
@@ -86,7 +122,8 @@ class ApiProvider {
 
   Future getOrderDetails(FormData params) async {
     try {
-      Response response = await _dio.post(EndPoints.get_order_detail, data: params);
+      Response response =
+          await _dio.post(EndPoints.get_order_detail, data: params);
       return GetOrderDetails.fromJson(jsonDecode(response.data));
     } catch (error, stacktrace) {
       print("Exception occurred: $error stackTrace: $stacktrace");
@@ -115,6 +152,7 @@ class ApiProvider {
     }
     return null;
   }
+
   Future rejectOrder(FormData params) async {
     try {
       Response response = await _dio.post(EndPoints.reject_order, data: params);
@@ -130,6 +168,7 @@ class ApiProvider {
     }
     return null;
   }
+
   Future acceptOrder(FormData params) async {
     try {
       Response response = await _dio.post(EndPoints.accept_order, data: params);
@@ -148,7 +187,9 @@ class ApiProvider {
 
   Future getCustomerFeedback(FormData params) async {
     try {
-      Response response = await _dio.post(EndPoints.get_customer_feedback_improvement_options, data: params);
+      Response response = await _dio.post(
+          EndPoints.get_customer_feedback_improvement_options,
+          data: params);
       return GetCustomerFeedback.fromJson(jsonDecode(response.data));
     } catch (error, stacktrace) {
       print("Exception occurred: $error stackTrace: $stacktrace");
@@ -161,9 +202,11 @@ class ApiProvider {
     }
     return null;
   }
+
   Future getProfile(FormData params) async {
     try {
-      Response response = await _dio.post(EndPoints.get_my_profile, data: params);
+      Response response =
+          await _dio.post(EndPoints.get_my_profile, data: params);
       return GetProfile.fromJson(jsonDecode(response.data));
     } catch (error, stacktrace) {
       print("Exception occurred: $error stackTrace: $stacktrace");
@@ -176,9 +219,11 @@ class ApiProvider {
     }
     return null;
   }
+
   Future withdrawPayment(FormData params) async {
     try {
-      Response response = await _dio.post(EndPoints.whitdraw_payment, data: params);
+      Response response =
+          await _dio.post(EndPoints.whitdraw_payment, data: params);
       return BeanWithdrawpayment.fromJson(jsonDecode(response.data));
     } catch (error, stacktrace) {
       print("Exception occurred: $error stackTrace: $stacktrace");
@@ -194,7 +239,8 @@ class ApiProvider {
 
   Future getOverAllReview(FormData params) async {
     try {
-      Response response = await _dio.post(EndPoints.get_overall_received_reviews, data: params);
+      Response response =
+          await _dio.post(EndPoints.get_overall_received_reviews, data: params);
       return GetOverAllReview.fromJson(jsonDecode(response.data));
     } catch (error, stacktrace) {
       print("Exception occurred: $error stackTrace: $stacktrace");
@@ -207,6 +253,7 @@ class ApiProvider {
     }
     return null;
   }
+
   Future getChat(FormData params) async {
     try {
       Response response = await _dio.post(EndPoints.get_chat, data: params);
@@ -222,9 +269,11 @@ class ApiProvider {
     }
     return null;
   }
+
   Future getOrderHistory(FormData params) async {
     try {
-      Response response = await _dio.post(EndPoints.order_history, data: params);
+      Response response =
+          await _dio.post(EndPoints.order_history, data: params);
       return GetOrderHistory.fromJson(jsonDecode(response.data));
     } catch (error, stacktrace) {
       print("Exception occurred: $error stackTrace: $stacktrace");
@@ -237,7 +286,6 @@ class ApiProvider {
     }
     return null;
   }
-
 
   Future loginUser(FormData params) async {
     try {
@@ -257,7 +305,8 @@ class ApiProvider {
 
   Future sendFeedback(FormData params) async {
     try {
-      Response response = await _dio.post(EndPoints.send_customer_feedback, data: params);
+      Response response =
+          await _dio.post(EndPoints.send_customer_feedback, data: params);
       return BeanSendFeedback.fromJson(jsonDecode(response.data));
     } catch (error, stacktrace) {
       print("Exception occurred: $error stackTrace: $stacktrace");
@@ -270,6 +319,7 @@ class ApiProvider {
     }
     return null;
   }
+
   Future tripSummary(FormData params) async {
     try {
       Response response = await _dio.post(EndPoints.trip_summary, data: params);
@@ -301,9 +351,11 @@ class ApiProvider {
     }
     return null;
   }
+
   Future<BeanForgotPassword> forgotPassword(FormData params) async {
     try {
-      Response response = await _dio.post(EndPoints.forgot_password, data: params);
+      Response response =
+          await _dio.post(EndPoints.forgot_password, data: params);
       return BeanForgotPassword.fromJson(json.decode(response.data));
     } catch (error, stacktrace) {
       print("Exception occurred: $error stackTrace: $stacktrace");
@@ -317,10 +369,10 @@ class ApiProvider {
     return null;
   }
 
-
   Future starDelivery(FormData params) async {
     try {
-      Response response = await _dio.post(EndPoints.start_delivery, data: params);
+      Response response =
+          await _dio.post(EndPoints.start_delivery, data: params);
       return BeanStartDelivery.fromJson(jsonDecode(response.data));
     } catch (error, stacktrace) {
       print("Exception occurred: $error stackTrace: $stacktrace");
@@ -334,10 +386,23 @@ class ApiProvider {
     return null;
   }
 
-
+  Future delivered(FormData params) async {
+    try {
+      Response response = await _dio.post(EndPoints.delivered, data: params);
+      return jsonDecode(response.data);
+    } catch (error, stacktrace) {
+      print("Exception occurred: $error stackTrace: $stacktrace");
+      Map<dynamic, dynamic> map = _dioError.response.data;
+      if (_dioError.response.statusCode == 500) {
+        throwIfNoSuccess(map['message']);
+      } else {
+        throwIfNoSuccess("Something gone wrong.");
+      }
+    }
+    return null;
+  }
 
   void throwIfNoSuccess(String response) {
     throw new HttpException(response);
   }
-
 }

@@ -343,7 +343,7 @@ class OrderScreenState extends State<OrderScreen> {
                 Padding(
                   padding: EdgeInsets.only(left: 16, top: 16),
                   child: Text(
-                    name,
+                    name.toString(),
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 14,
@@ -410,9 +410,12 @@ class OrderScreenState extends State<OrderScreen> {
                 Center(
                   child: InkWell(
                     onTap: () {
-
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => StartDeliveryScreen(deliveryAddress)),);
-
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => StartDeliveryScreen(
+                                deliveryAddress, widget.orderID)),
+                      );
                     },
                     child: Container(
                         margin: EdgeInsets.only(
@@ -605,7 +608,7 @@ class OrderScreenState extends State<OrderScreen> {
                 Padding(
                   padding: EdgeInsets.only(left: 16, top: 16),
                   child: Text(
-                    name,
+                    name.toString(),
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 14,
@@ -672,9 +675,12 @@ class OrderScreenState extends State<OrderScreen> {
                 Center(
                   child: InkWell(
                     onTap: () {
-
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => StartDeliveryScreen(deliveryAddress)),);
-
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => StartDeliveryScreen(
+                                deliveryAddress, widget.orderID)),
+                      );
                     },
                     child: Container(
                         margin: EdgeInsets.only(
@@ -721,8 +727,9 @@ class OrderScreenState extends State<OrderScreen> {
   Future<GetOrderDetails> getOrderDetails(BuildContext context) async {
     progressDialog.show();
     try {
+      var user = await Utils.getUser();
       FormData from = FormData.fromMap({
-        "userid": "70",
+        "userid": user.data.userId,
         "token": "123456789",
         "orderid": widget.orderID.toString()
       });

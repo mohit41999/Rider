@@ -15,6 +15,9 @@ import 'package:rider_app/utils/progress_dialog.dart';
 import '../res.dart';
 
 class TripSummaryScreen extends StatefulWidget {
+  final String orderid;
+
+  const TripSummaryScreen({Key key, @required this.orderid}) : super(key: key);
   @override
   TripSummaryScreenState createState() => TripSummaryScreenState();
 }
@@ -31,7 +34,7 @@ class TripSummaryScreenState extends State<TripSummaryScreen> {
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
-      future = getTripSummary(context);
+      future = getTripSummary(context, widget.orderid);
     });
 
     super.initState();
@@ -69,7 +72,7 @@ class TripSummaryScreenState extends State<TripSummaryScreen> {
               ),
               Center(
                   child: Text(
-                "You finished this order in"+" "+dilveryDuration,
+                "You finished this order in" + " " + dilveryDuration,
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.black, fontSize: 16),
               )),
@@ -82,41 +85,39 @@ class TripSummaryScreenState extends State<TripSummaryScreen> {
                         style: TextStyle(
                             color: AppConstant.lightGreen, fontSize: 16),
                       ))),
-
               SizedBox(
                 height: 30,
               ),
               Row(
                 children: [
                   Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                            padding: EdgeInsets.only(top: 20,left: 16),
-                            child: Text(
-                              "Trip Earning",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 16,
-                                  fontFamily: AppConstant.fontRegular),
-                            )),
-                        Padding(
-                            padding: EdgeInsets.only(top: 20,left: 16),
-                            child: Text(
-                              AppConstant.dollar+trip_earning,
-                              style: TextStyle(
-                                  color: AppConstant.lightGreen,
-                                  fontSize: 36,
-                                  fontFamily: AppConstant.fontRegular),
-                            )),
-                      ],
-                    )
-                  ),
+                      child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                          padding: EdgeInsets.only(top: 20, left: 16),
+                          child: Text(
+                            "Trip Earning",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontFamily: AppConstant.fontRegular),
+                          )),
+                      Padding(
+                          padding: EdgeInsets.only(top: 20, left: 16),
+                          child: Text(
+                            AppConstant.dollar + trip_earning,
+                            style: TextStyle(
+                                color: AppConstant.lightGreen,
+                                fontSize: 36,
+                                fontFamily: AppConstant.fontRegular),
+                          )),
+                    ],
+                  )),
                   Column(
                     children: [
                       Padding(
-                          padding: EdgeInsets.only(top: 20,right: 16),
+                          padding: EdgeInsets.only(top: 20, right: 16),
                           child: Text(
                             "Point gained",
                             style: TextStyle(
@@ -125,9 +126,9 @@ class TripSummaryScreenState extends State<TripSummaryScreen> {
                                 fontFamily: AppConstant.fontRegular),
                           )),
                       Padding(
-                          padding: EdgeInsets.only(top: 20,right: 16),
+                          padding: EdgeInsets.only(top: 20, right: 16),
                           child: Text(
-                            AppConstant.dollar+point_gained,
+                            AppConstant.dollar + point_gained,
                             style: TextStyle(
                                 color: AppConstant.lightGreen,
                                 fontSize: 36,
@@ -135,15 +136,13 @@ class TripSummaryScreenState extends State<TripSummaryScreen> {
                           ))
                     ],
                   )
-
                 ],
               ),
-
               Center(
                 child: Column(
                   children: [
                     Padding(
-                        padding: EdgeInsets.only(top: 20,right: 16),
+                        padding: EdgeInsets.only(top: 20, right: 16),
                         child: Text(
                           "Earning Today",
                           style: TextStyle(
@@ -152,9 +151,9 @@ class TripSummaryScreenState extends State<TripSummaryScreen> {
                               fontFamily: AppConstant.fontRegular),
                         )),
                     Padding(
-                        padding: EdgeInsets.only(top: 20,right: 16),
+                        padding: EdgeInsets.only(top: 20, right: 16),
                         child: Text(
-                          AppConstant.dollar+earnings_today,
+                          AppConstant.dollar + earnings_today,
                           style: TextStyle(
                               color: AppConstant.lightGreen,
                               fontSize: 36,
@@ -168,11 +167,17 @@ class TripSummaryScreenState extends State<TripSummaryScreen> {
         ));
   }
 
-  Future<BeanTripSummary> getTripSummary(BuildContext context) async {
+  Future<BeanTripSummary> getTripSummary(
+      BuildContext context, String orderid) async {
     progressDialog.show();
     try {
-      FormData from = FormData.fromMap(
-          {"token": "123456789", "userid": "70", "orderid": "2"});
+      print(orderid + 'llllll');
+      var user = await Utils.getUser();
+      FormData from = FormData.fromMap({
+        "token": "123456789",
+        "userid": user.data.userId,
+        "orderid": orderid
+      });
       BeanTripSummary bean = await ApiProvider().tripSummary(from);
       print(bean.data);
       progressDialog.dismiss();

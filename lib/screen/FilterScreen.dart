@@ -386,7 +386,7 @@ class _FilterScreenState extends State<FilterScreen> {
     try {
       var user = await Utils.getUser();
       FormData from = FormData.fromMap({
-        "userid": "70",
+        "userid": user.data.userId,
         "token": "123456789",
         "date_from": startDate,
         "date_to": endDate,

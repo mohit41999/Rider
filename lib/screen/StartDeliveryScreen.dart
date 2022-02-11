@@ -22,8 +22,9 @@ const double CAMERA_BEARING = 30;
 
 class StartDeliveryScreen extends StatefulWidget {
   var deliveryAddress;
+  final String orderid;
 
-  StartDeliveryScreen(this.deliveryAddress);
+  StartDeliveryScreen(this.deliveryAddress, this.orderid);
 
   @override
   StartDeliveryScreenState createState() => StartDeliveryScreenState();
@@ -35,8 +36,8 @@ class StartDeliveryScreenState extends State<StartDeliveryScreen> {
   double cameraTILT = 0;
   double cameraBEARING = 30;
   String _error;
-  LatLng SOURCE_LOCATION = LatLng(0.0 ,0.0);
-  LatLng DEST_LOCATION = LatLng(0.0,  0.0);
+  LatLng SOURCE_LOCATION = LatLng(0.0, 0.0);
+  LatLng DEST_LOCATION = LatLng(0.0, 0.0);
 
   List<Data> data;
 
@@ -50,10 +51,10 @@ class StartDeliveryScreenState extends State<StartDeliveryScreen> {
   PolylinePoints polylinePoints = PolylinePoints();
   String googleAPIKey = "AIzaSyBn9ZKmXc-MN12Fap0nUQotO6RKtYJEh8o";
 
-  var kitchenlat=0.0;
-  var kitchenlong=0.0;
-  var deliverylatitude=0.0;
-  var deliverylongitude=0.0;
+  var kitchenlat = 0.0;
+  var kitchenlong = 0.0;
+  var deliverylatitude = 0.0;
+  var deliverylongitude = 0.0;
   // for my custom icons
   BitmapDescriptor sourceIcon;
   BitmapDescriptor destinationIcon;
@@ -78,10 +79,9 @@ class StartDeliveryScreenState extends State<StartDeliveryScreen> {
     Future.delayed(Duration.zero, () {
       _listenLocation();
       setSourceAndDestinationIcons();
-
     });
     Future.delayed(Duration.zero, () {
-      future = getStartDelivery(context);
+      future = getStartDelivery(context, widget.orderid);
     });
   }
 
@@ -90,7 +90,7 @@ class StartDeliveryScreenState extends State<StartDeliveryScreen> {
     if (sourceLatLng != null && destLatLng != null) {
       var list = [sourceLatLng, destLatLng];
       CameraUpdate u2 =
-      CameraUpdate.newLatLngBounds(boundsFromLatLngList(list), 50);
+          CameraUpdate.newLatLngBounds(boundsFromLatLngList(list), 50);
       _mapController.animateCamera(u2).then((void v) {
         check(u2, _mapController);
       });
@@ -98,12 +98,14 @@ class StartDeliveryScreenState extends State<StartDeliveryScreen> {
     setMapPins();
     setPolylines();
   }
+
 /*  void onMapCreated(GoogleMapController controller) {
     _controller.complete(controller);
 
   }*/
   void setSourceAndDestinationIcons() async {
-    sourceIcon = await BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 2.5), Res.ic_rider);
+    sourceIcon = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5), Res.ic_rider);
     destinationIcon = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5), Res.ic_placeholder);
   }
@@ -119,7 +121,7 @@ class StartDeliveryScreenState extends State<StartDeliveryScreen> {
             Expanded(
               child: Stack(
                 children: [
-                 googleMap(),
+                  googleMap(),
                   Row(
                     children: [
                       InkWell(
@@ -180,12 +182,7 @@ class StartDeliveryScreenState extends State<StartDeliveryScreen> {
                               children: [
                                 InkWell(
                                   onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              TripSummaryScreen()),
-                                    );
+                                    Delivered(context, widget.orderid);
                                   },
                                   child: Container(
                                     width: 100,
@@ -260,7 +257,12 @@ class StartDeliveryScreenState extends State<StartDeliveryScreen> {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
       });
     }*/
-    List<PointLatLng> result = (await polylinePoints.getRouteBetweenCoordinates(googleAPIKey,SOURCE_LOCATION.latitude,SOURCE_LOCATION.longitude,DEST_LOCATION.latitude,DEST_LOCATION.longitude));
+    List<PointLatLng> result = (await polylinePoints.getRouteBetweenCoordinates(
+        googleAPIKey,
+        SOURCE_LOCATION.latitude,
+        SOURCE_LOCATION.longitude,
+        DEST_LOCATION.latitude,
+        DEST_LOCATION.longitude));
 /*    List<PointLatLng> result = (await polylinePoints.getRouteBetweenCoordinates(googleAPIKey, double.parse(kitchenlat),double.parse(kitchenlong), double.parse(deliverylatitude),double.parse(deliverylongitude),));*/
     if (result.isNotEmpty) {
       // loop through all PointLatLng points and convert them
@@ -286,29 +288,31 @@ class StartDeliveryScreenState extends State<StartDeliveryScreen> {
     });
   }
 
-  Future<BeanStartDelivery> getStartDelivery(BuildContext context) async {
+  Future<BeanStartDelivery> getStartDelivery(
+      BuildContext context, String orderid) async {
     try {
+      var user = await Utils.getUser();
       FormData from = FormData.fromMap({
-        "userid": "70",
-        "orderid": "3",
+        "userid": user.data.userId,
+        "orderid": orderid,
         "token": "123456789",
       });
       BeanStartDelivery bean = await ApiProvider().starDelivery(from);
       print(bean.data);
       if (bean.status == true) {
-        data=bean.data;
+        data = bean.data;
         setState(() {
-
-
 /*          kitchenlat=double.parse(bean.data[0].kitchenlatitude);
           kitchenlong=double.parse(bean.data[0].kitchenlongitude);
           deliverylatitude=double.parse(bean.data[0].deliverylatitude);
           deliverylongitude=double.parse(bean.data[0].deliverylongitude);*/
 
-           SOURCE_LOCATION = LatLng(double.parse(bean.data[0].kitchenlatitude),double.parse(bean.data[0].kitchenlongitude));
-           DEST_LOCATION = LatLng(double.parse(bean.data[0].deliverylatitude),double.parse(bean.data[0].deliverylongitude));
+          SOURCE_LOCATION = LatLng(double.parse(bean.data[0].kitchenlatitude),
+              double.parse(bean.data[0].kitchenlongitude));
+          DEST_LOCATION = LatLng(double.parse(bean.data[0].deliverylatitude),
+              double.parse(bean.data[0].deliverylongitude));
 
-          print("latjhhlong"+deliverylatitude.toString());
+          print("latjhhlong" + deliverylatitude.toString());
         });
         return bean;
       } else {
@@ -321,38 +325,65 @@ class StartDeliveryScreenState extends State<StartDeliveryScreen> {
     } catch (exception) {
       print(exception);
     }
+  }
 
+  Future Delivered(BuildContext context, String orderid) async {
+    try {
+      var user = await Utils.getUser();
+      FormData from = FormData.fromMap({
+        "userid": user.data.userId,
+        "orderid": orderid,
+        "token": "123456789",
+      });
+      var bean = await ApiProvider().delivered(from);
+      print(bean['data']);
+      if (bean['status'] == true) {
+        setState(() {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => TripSummaryScreen(orderid: orderid)));
+        });
+        return bean;
+      } else {
+        Utils.showToast(bean.message);
+      }
+
+      return null;
+    } on HttpException catch (exception) {
+      print(exception);
+    } catch (exception) {
+      print(exception);
+    }
   }
 
   googleMap() {
-     if(data!=null){
-       return GoogleMap(
-         myLocationEnabled: true,
-         compassEnabled: false,
-         tiltGesturesEnabled: false,
-         markers: _markers,
-         polylines: _polylines,
-         mapType: MapType.normal,
-         zoomControlsEnabled: true,
-         myLocationButtonEnabled: false,
-         onMapCreated: onMapCreated,
-         initialCameraPosition: _cameraPosition
-         /*CameraPosition(
+    if (data != null) {
+      return GoogleMap(
+          myLocationEnabled: true,
+          compassEnabled: false,
+          tiltGesturesEnabled: false,
+          markers: _markers,
+          polylines: _polylines,
+          mapType: MapType.normal,
+          zoomControlsEnabled: true,
+          myLocationButtonEnabled: false,
+          onMapCreated: onMapCreated,
+          initialCameraPosition: _cameraPosition
+          /*CameraPosition(
              zoom: CAMERA_ZOOM,
              bearing: CAMERA_BEARING,
              tilt: CAMERA_TILT,
              target: SOURCE_LOCATION
 
          ),*/
-       );
-     }else{
-       return Container();
-     }
-
+          );
+    } else {
+      return Container();
+    }
   }
 
-   updatePinOnMap() async {
-
+  updatePinOnMap() async {
 /*
 
      // create a new CameraPosition instance
@@ -389,45 +420,43 @@ class StartDeliveryScreenState extends State<StartDeliveryScreen> {
            icon: sourceIcon));
      });*/
 
-
-
-
     _cameraPosition = CameraPosition(
       zoom: cameraZOOM,
       tilt: cameraTILT,
       bearing: cameraBEARING,
-      target: LatLng(SOURCE_LOCATION.latitude,SOURCE_LOCATION.longitude),
+      target: LatLng(SOURCE_LOCATION.latitude, SOURCE_LOCATION.longitude),
     );
-    _mapController.animateCamera(CameraUpdate.newCameraPosition(_cameraPosition));
+    _mapController
+        .animateCamera(CameraUpdate.newCameraPosition(_cameraPosition));
     setState(() {
       _markers1.removeWhere((m) => m.markerId.value == "sourcePin");
       _markers1.add(
         Marker(
             markerId: MarkerId("sourcePin"),
-            position:  LatLng(SOURCE_LOCATION.latitude,SOURCE_LOCATION.longitude),
+            position:
+                LatLng(SOURCE_LOCATION.latitude, SOURCE_LOCATION.longitude),
             flat: true,
-            anchor: Offset(0.5,0.5),
+            anchor: Offset(0.5, 0.5),
             infoWindow: InfoWindow(title: "first"),
             icon: sourceIcon),
       );
     });
   }
 
-
   Future _listenLocation() async {
     print("updatePinOnMap");
     _locationSubscription =
         _locationTracker.onLocationChanged.handleError((dynamic err) {
-
-          setState(() {
-            _error = err.code;
-          });
-          _locationSubscription.cancel();
-        }).listen((LocationData currentLocation) {
-          _error = null;
-          updatePinOnMap();
-        });
+      setState(() {
+        _error = err.code;
+      });
+      _locationSubscription.cancel();
+    }).listen((LocationData currentLocation) {
+      _error = null;
+      updatePinOnMap();
+    });
   }
+
   LatLngBounds boundsFromLatLngList(List<LatLng> list) {
     assert(list.isNotEmpty);
     double x0, x1, y0, y1;
@@ -455,6 +484,7 @@ class StartDeliveryScreenState extends State<StartDeliveryScreen> {
     if (l1.southwest.latitude == -90 || l2.southwest.latitude == -90)
       check(u, c);
   }
+
   @override
   void dispose() {
     if (_locationSubscription != null) {
@@ -462,5 +492,4 @@ class StartDeliveryScreenState extends State<StartDeliveryScreen> {
     }
     super.dispose();
   }
-
 }

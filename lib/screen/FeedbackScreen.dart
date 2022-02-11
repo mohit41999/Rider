@@ -1,5 +1,3 @@
-
-
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,16 +23,16 @@ class FeedbackScreen extends StatefulWidget {
 class _FeedbackScreenState extends State<FeedbackScreen> {
   Future _future;
   Future _futureAll;
-  var rating=0.0;
-  var review="";
-  var excellent=0.0;
-  var good=0.0;
-  var avrg=0.0;
-  var poor=0.0;
-  var total="";
+  var rating = 0.0;
+  var review = "";
+  var excellent = 0.0;
+  var good = 0.0;
+  var avrg = 0.0;
+  var poor = 0.0;
+  var total = "";
   int mult = 5;
   int divide = 100;
-  var avgrating="";
+  var avgrating = "";
 
   ProgressDialog progressDialog;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -43,8 +41,6 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
     Future.delayed(Duration.zero, () {
       _future = getFeedback(context);
       _futureAll = getOverAllReview(context);
-
-
     });
 
     super.initState();
@@ -52,11 +48,11 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
 
   @override
   Widget build(BuildContext context) {
-    progressDialog=ProgressDialog(context);
+    progressDialog = ProgressDialog(context);
     FlutterStatusbarcolor.setStatusBarColor(Colors.transparent);
     FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
     return Scaffold(
-        backgroundColor:Color(0xff7ED39C),
+        backgroundColor: Color(0xff7ED39C),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -68,7 +64,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                     width: 16,
                   ),
                   InkWell(
-                    onTap: (){
+                    onTap: () {
                       Navigator.pop(context);
                     },
                     child: Padding(
@@ -86,7 +82,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                   ),
                   Expanded(
                     child: Padding(
-                      padding: EdgeInsets.only(left: 16,right: 16,top: 16),
+                      padding: EdgeInsets.only(left: 16, right: 16, top: 16),
                       child: Text(
                         "Feedback/Reviews",
                         style: TextStyle(
@@ -100,27 +96,29 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
               ),
               height: 70,
             ),
-
             Expanded(
               child: Container(
                 margin: EdgeInsets.only(top: 16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20)),
-                  ),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20)),
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Center(
-                      child: Padding(
-
-                        child: Text(avgrating,style: TextStyle(color: Colors.black,fontFamily: AppConstant.fontBold,fontSize: 20),),
-
-                        padding: EdgeInsets.only(top: 16),
-                      )
-                    ),
+                        child: Padding(
+                      child: Text(
+                        avgrating,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontFamily: AppConstant.fontBold,
+                            fontSize: 20),
+                      ),
+                      padding: EdgeInsets.only(top: 16),
+                    )),
                     Center(
                       child: RatingBarIndicator(
                         rating: 5,
@@ -135,9 +133,9 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                     ),
                     Center(
                       child: Padding(
-                        padding: EdgeInsets.only(left: 16,top: 10),
+                        padding: EdgeInsets.only(left: 16, top: 10),
                         child: Text(
-                          "Based on "+total+" review",
+                          "Based on " + total + " review",
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 14,
@@ -145,7 +143,6 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                         ),
                       ),
                     ),
-
                     SizedBox(
                       height: 35,
                     ),
@@ -157,18 +154,16 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                             child: Text("Excellent"),
                           ),
                         ),
-                         Padding(
-                           padding: EdgeInsets.only(right: 16),
-                           child: LinearPercentIndicator(
+                        Padding(
+                          padding: EdgeInsets.only(right: 16),
+                          child: LinearPercentIndicator(
                             width: 200.0,
                             lineHeight: 6.0,
                             percent: excellent,
                             backgroundColor: Colors.grey.shade300,
                             progressColor: Color(0xff7EDABF),
+                          ),
                         ),
-                         ),
-
-
                       ],
                     ),
                     SizedBox(
@@ -192,8 +187,6 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                             progressColor: Color(0xffFDD303),
                           ),
                         ),
-
-
                       ],
                     ),
                     SizedBox(
@@ -212,13 +205,11 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                           child: LinearPercentIndicator(
                             width: 200.0,
                             lineHeight: 6.0,
-                            percent:avrg,
+                            percent: avrg,
                             backgroundColor: Colors.grey.shade300,
                             progressColor: Color(0xffBEE8FF),
                           ),
                         ),
-
-
                       ],
                     ),
                     SizedBox(
@@ -249,7 +240,8 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                           future: _future,
                           builder: (context, projectSnap) {
                             print(projectSnap);
-                            if (projectSnap.connectionState == ConnectionState.done) {
+                            if (projectSnap.connectionState ==
+                                ConnectionState.done) {
                               var result;
                               if (projectSnap.data != null) {
                                 result = projectSnap.data.data;
@@ -269,25 +261,22 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                             }
                             return Container(
                                 child: Center(
-                                  child: Text(
-                                    "No Feedback Available",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 15,
-                                        fontFamily:
-                                        AppConstant.fontBold),
-                                  ),
-                                ));
+                              child: Text(
+                                "No Feedback Available",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 15,
+                                    fontFamily: AppConstant.fontBold),
+                              ),
+                            ));
                           }),
                     ),
-
                   ],
                 ),
               ),
             ),
           ],
-        )
-    );
+        ));
   }
 
   Widget getItem(result) {
@@ -297,29 +286,44 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
         Row(
           children: [
             Padding(
-              padding: EdgeInsets.only(left: 16,top: 10),
-              child: Image.asset(Res.user_default,width: 60,height: 60,),
+              padding: EdgeInsets.only(left: 16, top: 10),
+              child: Image.asset(
+                Res.user_default,
+                width: 60,
+                height: 60,
+              ),
             ),
-
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(left: 16,top: 16),
-                      child: Text(result.userName,style: TextStyle(color: Colors.black,fontSize: 16,fontFamily: AppConstant.fontBold),),
+                      padding: EdgeInsets.only(left: 16, top: 16),
+                      child: Text(
+                        result.userName,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontFamily: AppConstant.fontBold),
+                      ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 70,top: 10),
-                      child: Text(result.time,style: TextStyle(color: Colors.grey,fontSize: 14,fontFamily: AppConstant.fontRegular),),
+                      padding: EdgeInsets.only(left: 70, top: 10),
+                      child: Text(
+                        result.time,
+                        style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 14,
+                            fontFamily: AppConstant.fontRegular),
+                      ),
                     ),
                   ],
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: 16,top: 6),
+                  padding: EdgeInsets.only(left: 16, top: 6),
                   child: RatingBarIndicator(
-                    rating:  double.parse(result.ratting),
+                    rating: double.parse(result.ratting),
                     itemCount: 5,
                     itemSize: 20.0,
                     physics: BouncingScrollPhysics(),
@@ -330,38 +334,40 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: 16,top: 10),
-                  child: Text(result.reviewDescription,style: TextStyle(color: Colors.black,fontSize: 14,fontFamily: AppConstant.fontRegular),),
+                  padding: EdgeInsets.only(left: 16, top: 10),
+                  child: Text(
+                    result.reviewDescription,
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontFamily: AppConstant.fontRegular),
+                  ),
                 ),
                 Divider(
                   color: Colors.grey.shade400,
                 ),
               ],
             ),
-
           ],
-
         )
       ],
     );
-
-
   }
+
   Future<BeanGetFeedback> getFeedback(BuildContext context) async {
     progressDialog.show();
     try {
-      FormData from = FormData.fromMap({
-        "user_id": "70",
-        "token": "123456789"
-      });
+      var user = await Utils.getUser();
+      FormData from =
+          FormData.fromMap({"user_id": user.data.userId, "token": "123456789"});
       BeanGetFeedback bean = await ApiProvider().getFeedback(from);
       print(bean.data);
       progressDialog.dismiss();
       if (bean.status == true) {
         setState(() {
-          if(bean.data!=null){
+          if (bean.data != null) {
             rating = double.parse(bean.data[0].ratting);
-            review=bean.data[0].ratting;
+            review = bean.data[0].ratting;
           }
         });
 
@@ -383,24 +389,23 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
   Future<GetOverAllReview> getOverAllReview(BuildContext context) async {
     progressDialog.show();
     try {
-      FormData from = FormData.fromMap({
-        "user_id": "70",
-        "token": "123456789"
-      });
+      var user = await Utils.getUser();
+      FormData from =
+          FormData.fromMap({"user_id": user.data.userId, "token": "123456789"});
       GetOverAllReview bean = await ApiProvider().getOverAllReview(from);
       print(bean.data);
       progressDialog.dismiss();
       if (bean.status == true) {
         setState(() {
-          if(bean.data!=null){
-            excellent=(int.parse(bean.data[0].excellent)*5/100);
-            avrg=(int.parse(bean.data[0].average)*5/100);
-            good=(int.parse(bean.data[0].good)*5/100);
-            poor=(int.parse(bean.data[0].poor)*5/100);
-            total=bean.data[0].totalReview;
-            avgrating=bean.data[0].avgRattings.toString();
+          if (bean.data != null) {
+            excellent = (int.parse(bean.data[0].excellent) * 5 / 100);
+            avrg = (int.parse(bean.data[0].average) * 5 / 100);
+            good = (int.parse(bean.data[0].good) * 5 / 100);
+            poor = (int.parse(bean.data[0].poor) * 5 / 100);
+            total = bean.data[0].totalReview;
+            avgrating = bean.data[0].avgRattings.toString();
 
-         /*   child: Text(double.tryParse(data[numberdata].toString())*(5/100).toString()),*/
+            /*   child: Text(double.tryParse(data[numberdata].toString())*(5/100).toString()),*/
           }
         });
 
@@ -418,5 +423,4 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
       print(exception);
     }
   }
-
 }

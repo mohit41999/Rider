@@ -15,43 +15,38 @@ import 'package:rider_app/utils/progress_dialog.dart';
 
 class CustomerFeedback extends StatefulWidget {
   @override
-  CustomerFeedbackState createState() =>CustomerFeedbackState();
+  CustomerFeedbackState createState() => CustomerFeedbackState();
 }
 
 class CustomerFeedbackState extends State<CustomerFeedback> {
-
-  var isSelect=-1;
-  var isSelectEmoji=-1;
-  var isLike=-1;
+  var isSelect = -1;
+  var isSelectEmoji = -1;
+  var isLike = -1;
   Future _future;
-  var improveId="";
+  var improveId = "";
   ProgressDialog progressDialog;
   BeanSignUp userBean;
-  var name="";
+  var name = "";
 
   void getUser() async {
-    userBean  = await Utils.getUser();
+    userBean = await Utils.getUser();
 
-    name=userBean.data.kitchenname;
-    setState(() {
-
-    });
+    name = userBean.data.kitchenname;
+    setState(() {});
   }
+
   @override
   void initState() {
     getUser();
     Future.delayed(Duration.zero, () {
       _future = getCustomerFeedBack(context);
-
-
-
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    progressDialog=ProgressDialog(context);
+    progressDialog = ProgressDialog(context);
     FlutterStatusbarcolor.setStatusBarColor(Colors.transparent);
     FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
     return Scaffold(
@@ -66,28 +61,52 @@ class CustomerFeedbackState extends State<CustomerFeedback> {
                   height: 16,
                 ),
                 Center(
-                  child: Text("Customer Feedback",style: TextStyle(color: Colors.black,fontSize: 20,fontFamily: AppConstant.fontBold),),
+                  child: Text(
+                    "Customer Feedback",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontFamily: AppConstant.fontBold),
+                  ),
                 ),
                 SizedBox(
                   height: 16,
                 ),
                 Center(
-                  child: Text("You Just Delivered an order!",style: TextStyle(color: AppConstant.lightGreen,fontSize: 16,fontFamily: AppConstant.fontBold),),
+                  child: Text(
+                    "You Just Delivered an order!",
+                    style: TextStyle(
+                        color: AppConstant.lightGreen,
+                        fontSize: 16,
+                        fontFamily: AppConstant.fontBold),
+                  ),
                 ),
                 SizedBox(
                   height: 16,
                 ),
                 Center(
-                  child: Text("Order ID 123456",style: TextStyle(color: Colors.black,fontSize: 16,fontFamily: AppConstant.fontBold),),
+                  child: Text(
+                    "Order ID 123456",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontFamily: AppConstant.fontBold),
+                  ),
                 ),
                 SizedBox(
                   height: 16,
                 ),
                 Center(
-                  child: Text(name,style: TextStyle(color: Colors.black,fontSize: 16,fontFamily: AppConstant.fontBold),),
+                  child: Text(
+                    name,
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontFamily: AppConstant.fontBold),
+                  ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: 16,right: 16),
+                  padding: EdgeInsets.only(left: 16, right: 16),
                   child: Divider(
                     color: Colors.grey,
                   ),
@@ -99,104 +118,132 @@ class CustomerFeedbackState extends State<CustomerFeedback> {
                   padding: EdgeInsets.only(left: 15),
                   child: Text("Please rat your experience with customer"),
                 ),
-              Container(
-                height: 100,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  physics: BouncingScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return getItem(choices[index],index);
-                  },
-                  itemCount: choices.length,
+                Container(
+                  height: 100,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    physics: BouncingScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return getItem(choices[index], index);
+                    },
+                    itemCount: choices.length,
+                  ),
                 ),
-              ),
                 Padding(
                   padding: EdgeInsets.only(left: 16),
-                  child: Text("Tell us more so we can improve",style: TextStyle(color: Colors.black,fontSize: 15,fontFamily: AppConstant.fontBold),),
+                  child: Text(
+                    "Tell us more so we can improve",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15,
+                        fontFamily: AppConstant.fontBold),
+                  ),
                 ),
-               FutureBuilder<GetCustomerFeedback>(
-                   future: _future,
-                   builder: (context, projectSnap) {
-                     print(projectSnap);
-                     if (projectSnap.connectionState == ConnectionState.done) {
-                       var result;
-                       if (projectSnap.data != null) {
-                         result = projectSnap.data.data;
-                         if (result != null) {
-                           print(result.length);
-                           return Container(
-                             height: 150,
-                             child: GridView.count(
-                               childAspectRatio: (2 / 1.20),
-                               crossAxisSpacing: 15,
-                               mainAxisSpacing: 0,
-                               crossAxisCount: 3,
-                               children: List.generate(result.length, (index) {
-                                 return getFeedback(result[index], index);
-                               }),
-                             ),
-                           );
-                         }
-                       }
-                     }
-                     return Container(
-                         child: Center(
-                           child: Text(
-                             "No Feedback Available",
-                             style: TextStyle(
-                                 color: Colors.black,
-                                 fontSize: 15,
-                                 fontFamily:
-                                 AppConstant.fontBold),
-                           ),
-                         ));
-                   }),
-
-
+                FutureBuilder<GetCustomerFeedback>(
+                    future: _future,
+                    builder: (context, projectSnap) {
+                      print(projectSnap);
+                      if (projectSnap.connectionState == ConnectionState.done) {
+                        var result;
+                        if (projectSnap.data != null) {
+                          result = projectSnap.data.data;
+                          if (result != null) {
+                            print(result.length);
+                            return Container(
+                              height: 150,
+                              child: GridView.count(
+                                childAspectRatio: (2 / 1.20),
+                                crossAxisSpacing: 15,
+                                mainAxisSpacing: 0,
+                                crossAxisCount: 3,
+                                children: List.generate(result.length, (index) {
+                                  return getFeedback(result[index], index);
+                                }),
+                              ),
+                            );
+                          }
+                        }
+                      }
+                      return Container(
+                          child: Center(
+                        child: Text(
+                          "No Feedback Available",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 15,
+                              fontFamily: AppConstant.fontBold),
+                        ),
+                      ));
+                    }),
                 Padding(
-                  padding: EdgeInsets.only(left: 16,top: 10),
-                  child: Text("Tip received from customer? ",style: TextStyle(color: Colors.black,fontSize: 15,fontFamily: AppConstant.fontBold),),
+                  padding: EdgeInsets.only(left: 16, top: 10),
+                  child: Text(
+                    "Tip received from customer? ",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15,
+                        fontFamily: AppConstant.fontBold),
+                  ),
                 ),
-
                 Row(
                   children: [
                     InkWell(
-                      onTap: (){
+                      onTap: () {
                         setState(() {
-                          isLike=0;
+                          isLike = 0;
                         });
-                        },
+                      },
                       child: Column(
                         children: [
-
                           Padding(
                             padding: EdgeInsets.only(left: 16),
-                            child: Image.asset(Res.ic_like,width: 50,height: 50,),
+                            child: Image.asset(
+                              Res.ic_like,
+                              width: 50,
+                              height: 50,
+                            ),
                           ),
                           Padding(
                             padding: EdgeInsets.only(left: 16),
-                            child: Text("Yes",style: TextStyle(color: isLike==0?Colors.black:Colors.grey,fontSize: 15,fontFamily: AppConstant.fontBold),),
+                            child: Text(
+                              "Yes",
+                              style: TextStyle(
+                                  color:
+                                      isLike == 0 ? Colors.black : Colors.grey,
+                                  fontSize: 15,
+                                  fontFamily: AppConstant.fontBold),
+                            ),
                           ),
                         ],
                       ),
                     ),
                     InkWell(
-                      onTap: (){
+                      onTap: () {
                         setState(() {
-                          isLike=1;
+                          isLike = 1;
                         });
                       },
                       child: Column(
                         children: [
-
                           Padding(
                             padding: EdgeInsets.only(left: 16),
-                            child: Image.asset(Res.ic_unlike,width: 50,height: 50,),
+                            child: Image.asset(
+                              Res.ic_unlike,
+                              width: 50,
+                              height: 50,
+                            ),
                           ),
                           Padding(
                             padding: EdgeInsets.only(left: 16),
-                            child: Text("NO",style: TextStyle(color: isLike==1?Colors.black:Colors.grey,fontSize: 15,fontFamily: AppConstant.fontBold),),
+                            child: Text(
+                              "NO",
+                              style: TextStyle(
+                                  color:
+                                      isLike == 1 ? Colors.black : Colors.grey,
+                                  fontSize: 15,
+                                  fontFamily: AppConstant.fontBold),
+                            ),
                           ),
                         ],
                       ),
@@ -210,9 +257,7 @@ class CustomerFeedbackState extends State<CustomerFeedback> {
                   alignment: Alignment.center,
                   child: GestureDetector(
                     onTap: () {
-
                       validatin();
-
                     },
                     child: Container(
                       height: 40,
@@ -226,20 +271,20 @@ class CustomerFeedbackState extends State<CustomerFeedback> {
                             ],
                             begin: Alignment.bottomLeft,
                             stops: [0, 0, 0, 1],
-
                           ),
                           borderRadius: BorderRadius.circular(13)),
-                      margin: EdgeInsets.only(top: 25,left: 16,right: 16,bottom: 16),
+                      margin: EdgeInsets.only(
+                          top: 25, left: 16, right: 16, bottom: 16),
                       child: Center(
                           child: Text(
-                            "SUBMIT",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: AppConstant.fontBold,
-                              fontSize: 12,
-                              decoration: TextDecoration.none,
-                            ),
-                          )),
+                        "SUBMIT",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: AppConstant.fontBold,
+                          fontSize: 12,
+                          decoration: TextDecoration.none,
+                        ),
+                      )),
                     ),
                   ),
                 ),
@@ -251,18 +296,26 @@ class CustomerFeedbackState extends State<CustomerFeedback> {
 
   Widget getItem(Choice choic, int index) {
     return InkWell(
-
-      onTap: (){
+      onTap: () {
         setState(() {
-          isSelectEmoji=index;
+          isSelectEmoji = index;
         });
       },
       child: Padding(
         padding: EdgeInsets.only(left: 16),
-        child: isSelectEmoji==index?Image.asset(choic.Selectimage,width: 50,height: 50,):Image.asset(choic.image,width: 50,height: 50,),
+        child: isSelectEmoji == index
+            ? Image.asset(
+                choic.Selectimage,
+                width: 50,
+                height: 50,
+              )
+            : Image.asset(
+                choic.image,
+                width: 50,
+                height: 50,
+              ),
       ),
     );
-
   }
 
   Future<GetCustomerFeedback> getCustomerFeedBack(BuildContext context) async {
@@ -275,8 +328,7 @@ class CustomerFeedbackState extends State<CustomerFeedback> {
       print(bean.data);
       progressDialog.dismiss();
       if (bean.status == true) {
-        setState(() {
-        });
+        setState(() {});
         return bean;
       } else {
         Utils.showToast(bean.message);
@@ -293,52 +345,66 @@ class CustomerFeedbackState extends State<CustomerFeedback> {
   }
 
   Widget getFeedback(result, int index) {
-    return  InkWell(
-      onTap: (){
+    return InkWell(
+      onTap: () {
         setState(() {
-          isSelect=index;
-          improveId=result.improveId;
+          isSelect = index;
+          improveId = result.improveId;
         });
       },
       child: Container(
         height: 40,
-        margin: EdgeInsets.only(left: 10,top:16,right: 10),
+        margin: EdgeInsets.only(left: 10, top: 16, right: 10),
         decoration: BoxDecoration(
-            color: isSelect==index?AppConstant.lightGreen:Color(0xffF3F6FA),
-            borderRadius: BorderRadius.circular(100)
-        ),
+            color:
+                isSelect == index ? AppConstant.lightGreen : Color(0xffF3F6FA),
+            borderRadius: BorderRadius.circular(100)),
         child: Center(
           child: Padding(
               padding: EdgeInsets.all(10),
-              child: Text(result.option,textAlign:TextAlign.center,style: TextStyle(fontSize:10,color: isSelect==index?Colors.white:Colors.black,fontFamily: AppConstant.fontRegular),)),
+              child: Text(
+                result.option,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 10,
+                    color: isSelect == index ? Colors.white : Colors.black,
+                    fontFamily: AppConstant.fontRegular),
+              )),
         ),
       ),
     );
-
-
   }
 
-
-
   Future<BeanSendFeedback> sendFeedback() async {
-
     progressDialog.show();
     try {
       var user = await Utils.getUser();
       FormData data = FormData.fromMap({
         "token": "123456789",
-        "riderid": user.data.riderid.toString(),
+        "riderid": user.data.userId.toString(),
         "customerid": "15",
         "orderid": "1",
-        "rate": isSelectEmoji==0?"Average":isSelectEmoji==1?"Poor":isSelectEmoji==2?"Good":isSelectEmoji==3?"Excellent":"",
+        "rate": isSelectEmoji == 0
+            ? "Average"
+            : isSelectEmoji == 1
+                ? "Poor"
+                : isSelectEmoji == 2
+                    ? "Good"
+                    : isSelectEmoji == 3
+                        ? "Excellent"
+                        : "",
         "improveid": improveId,
-        "tip_received": isSelect==0?"Yes":isLike==1?"No":"",
+        "tip_received": isSelect == 0
+            ? "Yes"
+            : isLike == 1
+                ? "No"
+                : "",
       });
       print(data);
       BeanSendFeedback bean = await ApiProvider().sendFeedback(data);
       print(bean.data);
       progressDialog.dismiss();
-      if (bean.status ==true) {
+      if (bean.status == true) {
         Utils.showToast(bean.message);
         Navigator.pushNamed(context, '/feedback');
       } else {
@@ -347,37 +413,31 @@ class CustomerFeedbackState extends State<CustomerFeedback> {
     } on HttpException catch (exception) {
       progressDialog.dismiss();
     } catch (exception) {
-
       progressDialog.dismiss();
     }
   }
 
   void validatin() {
-
-    if(isSelectEmoji==-1){
+    if (isSelectEmoji == -1) {
       Utils.showToast("Please select rating");
-    }else if(isSelect==-1){
+    } else if (isSelect == -1) {
       Utils.showToast("Please select Improvement");
-    }else{
+    } else {
       sendFeedback();
     }
-
   }
-
-
-
 }
+
 class Choice {
-  Choice({this.image,this.Selectimage});
+  Choice({this.image, this.Selectimage});
 
   String image;
   String Selectimage;
 }
 
 List<Choice> choices = <Choice>[
-  Choice(image: Res.ic_emoji_one,Selectimage: Res.ic_emoji_one_color),
-  Choice(image: Res.ic_emoji_two,Selectimage: Res.ic_emoji_two_color),
-  Choice(image: Res.ic_emoi_four,Selectimage: Res.ic_emoji_colo_four),
-  Choice(image: Res.ic_emoji_grey_five,Selectimage: Res.ic_emoji_five),
+  Choice(image: Res.ic_emoji_one, Selectimage: Res.ic_emoji_one_color),
+  Choice(image: Res.ic_emoji_two, Selectimage: Res.ic_emoji_two_color),
+  Choice(image: Res.ic_emoi_four, Selectimage: Res.ic_emoji_colo_four),
+  Choice(image: Res.ic_emoji_grey_five, Selectimage: Res.ic_emoji_five),
 ];
-

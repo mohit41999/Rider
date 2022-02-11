@@ -28,16 +28,16 @@ class BeanTripSummary {
 }
 
 class Data {
-  String deliveryDuration;
-  String tripEarning;
-  int pointGained;
-  String earningsToday;
+  dynamic deliveryDuration;
+  dynamic tripEarning;
+  dynamic pointGained;
+  dynamic earningsToday;
 
   Data(
       {this.deliveryDuration,
-        this.tripEarning,
-        this.pointGained,
-        this.earningsToday});
+      this.tripEarning,
+      this.pointGained,
+      this.earningsToday});
 
   Data.fromJson(Map<String, dynamic> json) {
     deliveryDuration = json['delivery_duration'];

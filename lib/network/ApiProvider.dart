@@ -103,6 +103,40 @@ class ApiProvider {
     return null;
   }
 
+  Future editBankAccounts(FormData params) async {
+    try {
+      Response response =
+          await _dio.post(EndPoints.edit_bank_account, data: params);
+      return json.decode(response.data);
+    } catch (error, stacktrace) {
+      print("Exception occurred: $error stackTrace: $stacktrace");
+      Map<dynamic, dynamic> map = _dioError.response.data;
+      if (_dioError.response.statusCode == 500) {
+        throwIfNoSuccess(map['message']);
+      } else {
+        throwIfNoSuccess("Something gone wrong.");
+      }
+    }
+    return null;
+  }
+
+  Future deleteBankAccounts(FormData params) async {
+    try {
+      Response response =
+          await _dio.post(EndPoints.delete_bank_account, data: params);
+      return json.decode(response.data);
+    } catch (error, stacktrace) {
+      print("Exception occurred: $error stackTrace: $stacktrace");
+      Map<dynamic, dynamic> map = _dioError.response.data;
+      if (_dioError.response.statusCode == 500) {
+        throwIfNoSuccess(map['message']);
+      } else {
+        throwIfNoSuccess("Something gone wrong.");
+      }
+    }
+    return null;
+  }
+
   Future getFeedback(FormData params) async {
     try {
       Response response =

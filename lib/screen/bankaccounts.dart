@@ -10,8 +10,9 @@ import 'package:rider_app/utils/progress_dialog.dart';
 import 'package:rider_app/utils/Utils.dart';
 
 class BankAccounts extends StatefulWidget {
-  final String user_id;
-  const BankAccounts({Key key, @required this.user_id}) : super(key: key);
+  const BankAccounts({
+    Key key,
+  }) : super(key: key);
 
   @override
   _BankAccountsState createState() => _BankAccountsState();
@@ -36,8 +37,9 @@ class _BankAccountsState extends State<BankAccounts> {
   bool loading = true;
   Future<BankAccountsModel> getBankAccounts(BuildContext context) async {
     try {
+      var user = await Utils.getUser();
       FormData from =
-          FormData.fromMap({"user_id": widget.user_id, "token": "123456789"});
+          FormData.fromMap({"user_id": user.data.userId, "token": "123456789"});
       BankAccountsModel bean = await ApiProvider().getBankAccounts(from);
 
       if (bean.status) {
@@ -63,16 +65,17 @@ class _BankAccountsState extends State<BankAccounts> {
   Future EditBank(BuildContext context) async {
     progressDialog.show();
     try {
+      var user = await Utils.getUser();
       FormData from = FormData.fromMap({
         "token": "123456789",
-        "id": id,
+        "user_id": user.data.userId,
+        "account_id": id,
         "account_name": accountName.text,
         "bank_name": bankName.text,
         "ifsc_code": ifsc_Code.text,
         "account_number": accountNumber.text
       });
-      var bean;
-      // = await ApiProvider().Editbankacc(from);
+      var bean = await ApiProvider().editBankAccounts(from);
       progressDialog.dismiss();
 
       if (bean['status']) {
@@ -101,12 +104,13 @@ class _BankAccountsState extends State<BankAccounts> {
   Future DeleteBank(BuildContext context, String id) async {
     progressDialog.show();
     try {
+      var user = await Utils.getUser();
       FormData from = FormData.fromMap({
         "token": "123456789",
-        "id": id,
+        "account_id": id,
+        "user_id": user.data.userId,
       });
-      var bean;
-      // = await ApiProvider().Deletebankaacount(from);
+      var bean = await ApiProvider().deleteBankAccounts(from);
       progressDialog.dismiss();
       if (bean['status']) {
         if (bean["data"] != null) {
@@ -397,7 +401,7 @@ class _BankAccountsState extends State<BankAccounts> {
                     shape: RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(108.0),
                     ),
-                    color: AppConstant.appColor,
+                    color: AppConstant.lightGreen,
                     child: Text(
                       "Save Details".toUpperCase(),
                       style: TextStyle(

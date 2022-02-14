@@ -8,6 +8,7 @@ import 'package:rider_app/model/BeanGetProfile.dart';
 import 'package:rider_app/network/ApiProvider.dart';
 import 'package:rider_app/res.dart';
 import 'package:rider_app/screen/MyDrawer.dart';
+import 'package:rider_app/screen/bankaccounts.dart';
 import 'package:rider_app/utils/Constents.dart';
 import 'package:rider_app/utils/HttpException.dart';
 import 'package:rider_app/utils/Utils.dart';
@@ -226,20 +227,26 @@ class ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
               ),
-              Center(
-                child: Container(
-                  height: 50,
-                  margin: EdgeInsets.only(right: 16, top: 16, left: 16),
-                  decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Center(
-                    child: Text(
-                      "My Accounts",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 13,
-                          fontFamily: AppConstant.fontBold),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => BankAccounts()));
+                },
+                child: Center(
+                  child: Container(
+                    height: 50,
+                    margin: EdgeInsets.only(right: 16, top: 16, left: 16),
+                    decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Center(
+                      child: Text(
+                        "My Accounts",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 13,
+                            fontFamily: AppConstant.fontBold),
+                      ),
                     ),
                   ),
                 ),

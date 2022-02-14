@@ -359,6 +359,7 @@ class StartDeliveryScreenState extends State<StartDeliveryScreen> {
 
   googleMap() {
     if (data != null) {
+      setState(() {});
       return GoogleMap(
           myLocationEnabled: true,
           compassEnabled: false,
